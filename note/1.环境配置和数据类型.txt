@@ -1,0 +1,168 @@
+Python语言基础
+
+简介
+
+	面向对象 解释型计算机程序设计语言
+	设计哲学:优雅 明确 简单 可读性强
+	语法简洁 功能强大 开发效率高
+
+安装Python和环境配置
+	1 下载安装Python(3.4版本和2.7版本)
+	2  IDLE 打印HelloWorld
+		Python shell打印HelloWorld
+Print	 “Hello world”
+Print(“Hello world”)
+		新建文件打印 HelloWorld
+	3配置eclipse
+		注意64位的系统只能装64位的eclipse
+		配置java环境 eclipse.ini
+	4 配置PyDev和Eclipse
+		Python Interpreter(Python解释器)
+			在安装Python时已完成安装 Python.exe
+			配置path路径
+		安装pydev
+			在eclipse中help->Install New Software
+				Pydev路径 http://www.pydev.org/updates
+				选择第一个安装
+			配置Python Interpreter
+				Window->preferences
+
+
+ 
+新建PyDev Project –>新建PyDev Module 写HelloWorld程序
+
+Package
+	自带(Built-in)Package和外部(external)Package
+		自带(Built-in)Package
+			Import os;
+			Print os.getcwd()
+外部(external)Package及管理工具easy_install pip(C:\Python27\Scripts)
+	命令行安装requests
+	Pip install requests
+
+示例代码
+import os
+import requests
+print os.getcwd()
+r=requests.get("http://hk.google.com")
+print r.url
+print r.encoding
+print r.text
+
+
+数据类型
+	整数 浮点数 字符串 布尔值 空值
+	Numeric
+		Int(包括Boolean)
+float 实现用double in c 可查看sys.float_info
+complex 复数 包含实部和虚部
+	定义变量 变量名=complex(实部,虚部)
+// 整除符号
+
+	字符串
+		单引号 双引号 三引号的用法
+			print('''this is first line
+this is second line
+this is third line''')
+		Format
+name="cityking"
+age=28
+print("{0} was {1} years old!".format(name, age))
+		联合 用+把不同字符串连接起来
+print(name+" was "+str(age)+" years old!")
+	字面常量
+	变量
+		动态变量，不需要声明类型
+	注释 # 单行注释
+			Eclipse中注释快捷键Ctrl+/
+	缩进 python中不能缩进，不然会报错
+
+	指定编码
+		# -*- encoding:UTF-8 -*-
+		解决打印中文乱码
+List
+	创建List
+num_list=[1,3,5,7,9]
+str_list=["hello","你好","world","cityking"]
+mix_list=["hello",3,"cityking",6]
+		访问列表中的元素
+second_num=num_list[1]
+third_str=str_list[2]
+fourth_mix=mix_list[3]
+		更新列表
+			num_list[1]=30
+print("number_list after updated:"+str(num_list))
+		删除列表
+del num_list[1]
+print("number_list after deleted:"+str(num_list))
+		截取列表
+			print(num_list[-1])
+print(num_list[1])
+print(num_list[-2:])
+
+其它函数
+print(len([1,2,3]))
+print([1,2,3]+[4,5,6])
+print(["hello"]*4)
+print(3 in [1,2,3])
+
+元组(Tuple)
+	Tuple一旦被创建不能被更改
+num_tuple = (1, 3, 5, 7, 9)
+str_tuple = ("hello", "你好", "world", "cityking")
+mix_tuple = ("hello", 3, "cityking", 6)
+second_num=num_tuple[1]
+third_str=str_tuple[2]
+fourth_mix=mix_tuple[3]
+
+print(len((1,2,3)))
+print((1,2,3)+(4,5,6))
+print(("hello")*4)
+print(3 in (1,2,3))
+
+abcd_tuple=("a","b","c","d") 
+print(abcd_tuple[-1])
+print(abcd_tuple[1])
+print(abcd_tuple[1:])
+	Tuple和list的区别
+		Tuple在创建只有一个元素的时候需要在后面加逗号消除歧义
+a_tuple=(1,)
+		Tuple中的List
+			mixed_touple = (1,2,['a','b'])
+print("mixed_touple:"+str(mixed_touple))
+
+mixed_touple[2][0]='c'
+mixed_touple[2][1]='d'
+print("mixed_touple after:"+str(mixed_touple))
+
+	Dictionary字典
+		#创建
+phone_book={"cityking":1358764,"chenhai":157894,"huazai":5672347}
+mixed_dic={"name":"cityking","age":28}
+print("phone_book:"+str(phone_book))
+print("mixed_dic:"+str(mixed_dic))
+
+#查询
+print("cityking:"+str(phone_book["cityking"]))
+
+#修改
+phone_book["cityking"]=123456
+print("cityking after:"+str(phone_book["cityking"]))
+
+#添加
+phone_book["tom"]=1546987
+print("phone_book:"+str(phone_book))
+
+#删除
+del phone_book["tom"]
+print("phone_book:"+str(phone_book))
+phone_book.clear()
+print("phone_book:"+str(phone_book))
+
+del phone_book
+print("phone_book:"+str(phone_book))
+
+特性
+	同一词典不能出现两个相同的key
+	词典里的键是不可变的所以可以用元组、数字、字符串，不能是List
+

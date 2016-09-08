@@ -1,0 +1,107 @@
+接受用户输入 input
+输出格式化 str(),format
+	str1=input("Enter a str:")
+str2=input("Enter another str:")
+print("str1 is "+str1+",str2 is "+str2)
+print("str1 is {},str2 is {}".format(str1, str2))
+注意：input输入字符串时一定要加引号
+文件的输入与输出
+	写入
+		str='''this is first line
+this is second line
+this is third line'''
+
+f = open("temp.txt","w")
+f.write(str)
+f.close()
+
+	读取
+f=open("temp.txt")
+while True:
+   			line=f.readline()
+    			if len(line)==0:
+        			break
+    			print(line)
+f.close()
+
+
+错误和异常处理
+	while True:
+    try:
+        num=int(input("Enter a num:"))
+        break
+    except ValueError:
+        print("Not Valid input,try again")
+
+
+try:
+    		f=open("temp.txt")
+    		s=f.readline()
+    		i=int(s.strip())#strip()去掉空格
+except IOError as err:
+    		print("IO error:{}".format(err))
+except ValueError:
+    		print("string canot convert to integer")
+面向对象
+class student:
+    		def __init__(self,name,grade):
+        		self.name=name
+        		self.grade=grade
+    		def introduce(self):
+        		print("my name is {}".format(self.name))
+        		print("my grade is {}".format(self.grade))
+    		def improve(self,amount):
+        		self.grade+=amount
+jim = student("jim",60)
+jim.introduce()
+jim.improve(10)
+jim.introduce()
+
+装饰器
+def add_candles(cake_func):
+    		def insert_candles():
+        		return cake_func() + " and candles"
+    		return insert_candles
+@add_candles
+def make_cake():
+    		return "cake"
+print(make_cake())
+图形界面GUI
+from Tkinter import *
+
+import tkSimpleDialog as dl
+import tkMessageBox as mb
+
+root=Tk()
+w=Label(root,text="guess number game")
+w.pack()
+
+mb.showinfo("guess number game", "welcome to guess number game")
+
+number = 59
+while True:
+    		guess=dl.askinteger("guess", "enter your guess number")
+    		if number==guess:
+       		output="your guess right"
+       		mb.showinfo("win",output)
+       		break
+    		elif number>guess:
+        		output="your guess is lower than number,please again"
+        		mb.showinfo("fail",output)
+    		else:
+        		output="your guess is higher than number,please again"
+        		mb.showinfo("fail",output)
+print("done")
+
+创建网页
+	用easy_install安装lpthw.web库
+	在gotoweb目录下的bin文件夹下创建app.py
+import web
+urls=('/','index')
+app=web.application(urls,globals())
+class index:
+    		def GET(self):
+        		greeting="hello world"
+        		return greeting
+if __name__=="__main__":
+    		app.run()

@@ -1,0 +1,52 @@
+#没有参数和返回值的函数
+
+from __builtin__ import str
+def say_hi():
+    		print("hi!")
+say_hi()
+
+#有参数没有返回值的函数
+def sum_two(a,b):
+    		c=a+b
+    		print(c)
+sum_two(2,6)
+
+def hello_some(str):
+   		 print("hello "+str+"!")
+hello_some("world")
+hello_some("cityking")
+
+#有参数和返回值的函数
+def reapt_str(str,tims):
+    		repeated_str=str*tims
+    		return repeated_str
+print(reapt_str("Happy birthday",4))
+全局变量和局部变量
+	在函数内用global定义全局变量
+x=20
+def foo():
+    			global x
+    			print("x="+str(x))
+   			x=3
+    			print("x="+str(x))
+foo()
+print("x="+str(x))
+
+
+默认参数
+	默认参数必需放在最后面
+		def reapt_str(str,times=1):
+    			repeated_str=str*times
+    			return repeated_str
+print(reapt_str("Happy birthday"))
+print(reapt_str("Happy birthday",4))
+关键字参数
+def func(a,b=2,c=3):
+    		print('a is '+str(a)+',b is '+str(b)+',c is '+str(c))
+func(c=6,a=4)
+varArgs参数
+	def print_param(fpara,*num,**words):
+    		print("fpara:"+str(fpara))
+    		print("num:"+str(num))
+    		print("words:"+str(words))
+print_param("hello",1,3,5,7,9,name="cityking",phone=12345)
