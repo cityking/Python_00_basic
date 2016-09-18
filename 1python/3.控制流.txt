@@ -1,0 +1,68 @@
+If语句
+	number=59
+guess=int(input("Enter a number:"))
+if guess==number:
+    		print("the guess is right")
+elif guess>number:
+    		print("the guess is higher than number")
+else:
+    		print("the guess is lower than number")
+print("done")
+for and range语句
+for i in range(1,10):
+    		print(i)
+print("over")
+
+a_list=[1,3,5,7,9]
+for i in a_list:
+    		print(i)
+    
+a_tuple=[1,3,5,7,9]
+for i in a_tuple:
+    		print(i)
+    
+a_dic={"cityking":552,"chenhai":586,"huazai":125}
+for ele in a_dic:
+    		print(ele)
+    print(a_dic[ele])
+
+for key,value in a_dic.items():
+    print(key,value)
+while循环语句
+number=59
+guess_flag=False
+while guess_flag==False:
+    
+    		guess=int(input("Enter a Integer:"))
+    		if guess==number:
+        		guess_flag=True
+    		elif guess>number:
+        		print("your number is lower than that")
+    		else:
+        		print("your number is higher than that")
+print("your guess is right")
+print("done")
+
+break continue pass
+	break跳出整个循环
+	continue跳出本次循环
+	pass直接跳到下一条语句，相当于什么都没做
+		num_list = [0, 1, 2]
+
+print("using break:")
+for i in num_list:
+    			if not i:
+        			break
+    				print(i)
+    
+print("using continue:")
+for i in num_list:
+    			if not i:
+        			continue
+    				print(i)
+
+print("using pass:")
+for i in num_list:
+    			if not i:
+        			pass
+    				print(i)

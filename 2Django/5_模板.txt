@@ -1,0 +1,72 @@
+1.模板组成
+	html代码+逻辑控制代码
+2.逻辑控制代码的组成
+	变量 使用双大括号来引用变量 {{var_name}}
+	标签(tag) 使用大括号和百分号的组成来表示使用标签{% load staticfiles %}
+	过滤器(filter) {{ship_date|date:"F j,Y"}} ship_date变量传给date过滤器，date过滤器通过"F j,Y"这几个参数来格式化日期数据
+
+3.常用标签
+	{% if %}标签
+		{% if athlete == '0' %}
+    		athlete : 0
+    		{% elif athlete == '1' %}
+    		athlete : 1
+    		{% else %}
+    		No athletes.
+
+	官方文档：https://docs.djangoproject.com/en/1.10/ref/templates/language/
+
+	{% for %}标签
+		<ul>
+    		{% for athlete in athlete_list reversed %}
+        		<li>{{ athlete}}</li>
+		{% empty %}
+        		内容为空
+    		{% endfor %}
+    		</ul>
+	{% csrf_token %}跨站验证
+	{% url %}引用url地址
+	{% with %}对长变量取别名
+	{% verbatim %}禁止渲染
+    		{% verbatim %}
+        		{{ ver }}
+    		{% endverbatim %}
+	{% autoescape %}自动转译
+
+4.过滤器
+	
+	1.{% filter force_escape|lower %}
+    		This text will be HTML-escaped, and will appear in all lowercase.
+	  {% endfilter %}
+	2.{{ value | lower }} {{ value1 | add:2 }}
+	3.addslashes 加斜线
+	4.capfirst 首字母大写
+	5.cut 从字符串中删除指定字符
+	6.date 格式化日期
+		{{ value2 | date:"Y年m月d日" }}
+	7.default
+	8.default_if_none
+	9.escape 对指定字符串自动转译
+	10.safe 关闭自动转译
+	11.filesizeformat 格式化文件大小显示
+	12.truncatechars
+	13.truncatewords
+	14.striptags 过滤掉html标签
+5.包含
+	{% include 'sub.html' %}
+	{% include 'aaa/sub.html' %}
+
+	from django.template import loader,Template
+	value3 = Template("<a href='http://www.maiziedu.com' target='blank'>麦子学院</a>")
+	{% include value3 %}
+
+	https://docs.djangoproject.com/en/1.10/ref/templates/builtins/#include
+6.继承
+
+	{% block %}
+	{% extends %}
+	{{block.super}} 获取父模板的内容
+	https://docs.djangoproject.com/en/1.10/ref/templates/language/#template-inheritance
+
+
+	

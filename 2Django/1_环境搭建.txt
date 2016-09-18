@@ -1,0 +1,23 @@
+环境要求
+	python3.5.1
+	Django1.9.5
+	pymysql
+	mySql
+	pycharm
+	sublime text
+步骤
+	1.安装python
+	2.更新pip
+	3.安装virtualenv 
+		pip install virtualenv
+	4.创建虚拟环境 virtualenv Django_basic_venv
+	5.使用虚拟环境 *\Django_basic_venv\Scripts\activate
+		退出虚拟环境 deactivate
+	6.在虚拟环境中安装Django 
+		pip install django
+	7.在虚拟环境中安装pymysql
+		pip install pymysql
+	8.安装mysql
+	9.安装navicat
+
+

@@ -1,0 +1,27 @@
+登陆 mysql -uroot -p
+修改命令提示符 
+	登录前 mysql -uroot -p --prompt=king
+	登陆后	prompt 参数 
+		参数 	\D 完整的日期 
+			\d 当前数据库
+			\h 服务器名称
+			\u 当前用户名
+mysql常用命令
+	mysql默认分隔符 ; \g
+	select version() 显示当前版本
+	select now() 显示当前时间
+	selcet user() 显示当前用户
+mysql语句规范
+	关键字和函数名全部大写
+	数据库名、表名、字段名等全部小写
+	必需以分隔符结尾
+	数据库名、表名、字段名尽量不要使用关键字 如使用的话需要使用反引号括起来
+	引号不能分开写
+\c 取消执行
+delimiter 修改分隔符
+开启输出日志 \T 文件名 \t结束输出日志
+	
+
+
+
+	

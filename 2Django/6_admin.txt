@@ -1,0 +1,20 @@
+admin
+	ModelAdmin 管理界面的定制类 如需扩展特定的Model界面，需要从此类继承
+	class PublisherAdmin(admin.ModelAdmin):
+    		list_display = ('name','country','state_province','city')
+	注册
+		用register方法注册
+		admin.site.register(Publisher,PublisherAdmin)
+
+		用register装饰器注册
+		@admin.register(Publisher)
+		class PublisherAdmin(admin.ModelAdmin):
+    			list_display = ('name','country','state_province','city')
+	常用设置
+		list_display 指定要显示的字段
+		search_field 指定要搜索的字段
+		list_filter 指定列表过滤器
+		ordering 指定排序字段
+		fields/exclude 指定编辑表单 需要编辑/不需要编辑 的字段
+		fieldsets 设置分组表单
+			https://docs.djangoproject.com/en/1.10/ref/contrib/admin/#django.contrib.admin.ModelAdmin.exclude

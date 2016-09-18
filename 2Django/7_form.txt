@@ -1,0 +1,159 @@
+所有的表单类都是作为django.forms.Form的子类创建，包括ModelForm
+django表单系统分两类
+	django.forms.Form 所有表单类的父类
+	django.forms.ModelForm 可以和模型类绑定的Form
+
+	1.不使用django Form对象
+		view.py添加add_publisher函数
+
+		def add_publisher(request):
+    			if request.method=='POST':
+        			Publisher.objects.create(
+            			name=request.POST['name'],
+            			address=request.POST['address'],
+            			city=request.POST['city'],
+            			state_province=request.POST['state_province'],
+            			country=request.POST['country'],
+            			website=request.POST['website'],
+        			)
+        			return HttpResponse("出版社信息添加成功")
+    			else:
+        			return render(request, 'add_publisher.html', locals())
+
+		添加模板add_publisher.html
+
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+    		<meta charset="UTF-8">
+    		<title>添加出版社信息</title>
+		</head>
+		<body>
+		<form method="post" action="{% url 'add_publisher' %}">
+    		{% csrf_token %}
+    		名称：<input type="text" name="name"><br/>
+    		地址：<input type="text" name="address"><br/>
+    		城市：<input type="text" name="city"><br/>
+    		省份：<input type="text" name="state_province"><br/>
+    		国家：<input type="text" name="country"><br/>
+    		网址：<input type="text" name="website"><br/>
+
+
+    		<input type="submit" value="提交">
+		</form>
+
+		</body>
+		</html>
+
+		在urls.py里面定义url访问地址
+			url(r'^add_publisher/$', views.add_publisher,name='add_publisher'),
+
+	
+	2.使用Django Form对象
+		新建一个模板 forms.py
+			from django import forms
+
+			class Publisher_form(forms.Form):
+    				name = forms.CharField()
+    				address = forms.CharField()
+    				city = forms.CharField()
+    				state_province = forms.CharField()
+    				country = forms.CharField()
+    				website = forms.URLField()
+		修改view.py中的add_publisher方法
+			def add_publisher(request):
+    				if request.method=='POST':
+					publisher = Publisher_form(request.POST)
+        				if publisher.is_valid():
+            					Publisher.objects.create(
+                					name=publisher.cleaned_data['name'],
+                					address=publisher.cleaned_data['address'],
+                					city=publisher.cleaned_data['city'],
+                					state_province=publisher.cleaned_data['state_province'],
+                					country=publisher.cleaned_data['country'],
+               					 	website=publisher.cleaned_data['website'],
+            					)
+        					return HttpResponse("出版社信息添加成功")
+    				else:
+        				publisher = Publisher_form()
+        			return render(request, 'add_publisher.html', locals())
+		修改模板add_publisher.html的form标签
+			<form method="post" action="{% url 'add_publisher' %}">
+    			{% csrf_token %}
+    			{{ publisher.as_p }}
+			<input type="submit" value="提交">
+			</form>
+
+	3.使用ModelForm的情况
+		修改模板 forms.py
+		class Publisher_form(forms.ModelForm):
+			    class meta:
+        			model = Publisher
+        			exclude = ('id',)
+
+		修改view.py
+			if publisher.is_valid():
+				publisher.save()
+
+Form验证
+	1.表单字段验证器
+		https://docs.djangoproject.com/en/1.10/ref/validators/
+		修改forms.py
+			from django.core.exceptions import ValidationError
+
+			def validate_name(value):
+    				try:
+        				Publisher.objects.get(name=value)
+        				raise ValidationError("信息已经存在")
+    				except Publisher.DoesNotExist:
+        				pass
+			class Publisher_form(forms.ModelForm):
+    				name = forms.CharField(label='名称',validators=[validate_name])
+    				class Meta:
+        				model = Publisher
+        				exclude = ('id',)
+	2.clean_fieldname验证字段，针对某个字段进行验证
+		class Publisher_form(forms.ModelForm):
+   			def clean_name(self):
+        			value = self.cleaned_data['name']
+        			try:
+            				Publisher.objects.get(name=value)
+            				raise ValidationError("%s的信息已经存在" % value)
+        			except Publisher.DoesNotExist:
+            				pass
+        			return value
+
+    			class Meta:
+        			model = Publisher
+        			exclude = ('id',)
+	3.表单clean方法，针对整个表单验证
+		class Publisher_form(forms.ModelForm):
+    			def clean(self):
+        			cleaned_data = super(Publisher_form, self).clean()
+        			value = cleaned_data.get('name')
+        			try:
+            				Publisher.objects.get(name=value)
+            				self._errors['name']=self.error_class(["%s的信息已经存在" % value])
+        			except Publisher.DoesNotExist:
+            				pass
+        			return cleaned_data
+
+    			class Meta:
+        			model = Publisher
+        			exclude = ('id',)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		

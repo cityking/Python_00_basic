@@ -1,0 +1,230 @@
+mysql使用步骤
+	1.安装pymysql驱动pip install
+	2.修改配置文件
+		DATABASES = {
+    			'default': {
+        			'ENGINE': 'django.db.backends.mysql',
+       			 	'NAME': 'hello_django_db',
+        			'USER': 'root',
+        			'PASSWORD': 'ct065410',
+        			# 'HOST':'',
+        			# 'PORT':'',
+    			}
+		}
+	3.在工程目录下的__init__.py文件下增加代码
+		import pymysql
+		pymysql.install_as_MySQLdb()
+	4.数据库同步 tools->manage.py
+		makemigrations
+		migrate
+models.py
+	1.创建模型
+		class Publisher(models.Model):
+    			name = models.CharField(max_length=30, verbose_name="名称")
+    			address = models.CharField("地址", max_length=50)
+    			city = models.CharField(max_length=60)
+    			state_province = models.CharField(max_length=30)
+    			country = models.CharField(max_length=50)
+    			website = models.URLField()
+
+    			def __str__(self):
+        			return self.name
+
+		class Author(models.Model):
+    			name = models.CharField(max_length=30)
+    			
+		class AuthorDetail(models.Model):
+    			sex = models.BooleanField(max_length=1, choices=((0, '男'),(1, '女'),))
+    			email = models.EmailField()
+    			address = models.CharField(max_length=50)
+    			birthday = models.DateField()
+    			author = models.OneToOneField(Author)
+   
+
+		class Book(models.Model):
+    			title = models.CharField(max_length=100)
+    			authors = models.ManyToManyField(Author)
+    			publisher = models.ForeignKey(Publisher)
+    			publication_date = models.DateField()
+   
+
+	2.模型常用字段数据类型
+	3.模型常用字段选项
+	4.通过定义内部Meta类给数据模型类添加扩展属性
+		 class Meta:
+        		verbose_name = '出版商'
+        		verbose_name_plural = verbose_name
+	5.在admin.py注册自己定义的数据模型
+		from django.contrib import admin
+		from hello.models import *
+
+		admin.site.register(Publisher)
+		admin.site.register(Author)
+		admin.site.register(AuthorDetail)
+		admin.site.register(Book)
+	6.定义模型方法
+		定义__unicode__()(python 2.7) 
+			__str__()(python 3.4)
+	7.定义字段属性
+		name = models.CharField(max_length=30,verbose_name = '名称')
+		address = models.CharField('地址',max_length=50)
+
+数据库同步
+	目录 migrations
+		存放通过makemigrations命令生成的数据库脚本 
+		app目录下必须有migrations目录，
+		且该目录下必须有__init__.py文件才能完成数据库同步功能
+	表 django_migrations
+		记录数据库脚本使用的情况
+		字段 	app app名字
+		     	name 脚本的文件名称
+			applied 脚本的执行时间
+	数据库相关的命令
+		makemigrations 生成数据库同步的脚本
+		showmigrations 查看生成的数据库同步的脚本
+		migrate 同步数据库
+		sqlmigrate 查看数据库同步的sql语句
+		flush 清空数据库 恢复数据库到最初状态
+		sqlflush 查看生成清空数据库的脚本
+ORM常用操作
+	1.增加 create和save方法
+		配置输出sql语句到控制台，在settings.py文件后加上
+			LOGGING = {
+    				'version': 1,
+    				'disable_existing_loggers': False,
+    				'handlers': {
+       				 	'console':{
+            					'level':'DEBUG',
+            					'class':'logging.StreamHandler',
+       						},
+    					},
+    				'loggers': {
+        				'django.db.backends': {
+            					'handlers': ['console'],
+            					'propagate': True,
+            					'level':'DEBUG',
+        					},
+    					}
+				}
+		在控制台进入虚拟环境并到工程文件目录下
+			python manage.py shell进入manage.py shell
+				from hello.models import *
+				Author.objects.create(name='胡大海')
+		create方法 
+			AuthorDetail.objects.create									(sex=0,email='hudahai@ss.com',address='beijingXXX',
+			birthday='1989-1-6',author_id=1)
+		save方法
+ 			pub = Publisher()
+ 			pub.name='成都出版社'
+ 			pub.address='成都XXX'
+ 			pub.city='成都'
+ 			pub.state_province ='四川'
+ 			pub.country = '中国'
+ 			pub.website = 'www.ffgh.com'
+ 			pub.save()
+		多对多关系的表中插入数据
+			Book.objects.create(title='python实									战',publisher=pub,publication_date='2016-2-15')
+			book = Book.objects.get(id=1)
+			author = Author.objects.get(id=1)
+			book.authors.add(author)
+			插入主外键关系的时候，可以以对象的方式，也可以以关联id的方式
+			插入多对多要分布操作
+		objects model的默认管理器
+		create是objects管理器的方法
+		save是对象本身的方法
+	2.修改
+		update和save
+		author=Author.objects.get(id=1)
+		author.name='王城'
+		author.save()
+
+		Publisher.objects.filter(id=1).update(city='上海',state_province='上海')
+		update是QuerySet对象的方法
+	3.查询(惰性机制)
+		Publisher.objects.all()只是返回一个QuerySet对象，并不会马上执行Sql语句，只有在使用QuerySet对象时才会执行sql语句
+	4.删除
+		 Publisher.objects.filter(city='上海').delete()
+
+查询常用的API
+	get(**kwargs)只能查询一条数据，返回model对象
+	all() 返回QuerySet
+	filter(**kwargs)  返回QuerySet 查询与条件相匹配的结果
+		Publisher.objects.filter(city='北京')
+	exclude(**kwargs) 查询与条件不匹配的结果
+		Publisher.objects.exclude(city='北京')
+	order_by(*fields) 对查询结果排序
+		Publisher.objects.all().order_by('id')升序
+		Publisher.objects.all().order_by('-id')降序
+	reverse() 对查询结果反向排序
+		Publisher.objects.all().order_by('id').reverse()
+	distinct() 从返回结果中剔除重复记录
+		Publisher.objects.all().values('city').distinct()
+	values(*fields) 返回的是字典
+		Publisher.objects.filter(id=2).values("name","website")
+	value_list(*fields) 返回的是元组
+		Publisher.objects.filter(id=2).values_list("name","website")
+	count()
+		Publisher.objects.exclude(city='北京').count()
+ 	first()
+		Publisher.objects.exclude(city='北京').first()
+	last() 
+		Publisher.objects.exclude(city='北京').last()
+	exists()
+		Publisher.objects.exclude(city='北京').exists()
+
+多表查询
+	__:两个下划线可以生成连接查询，查询关联的字段信息
+		AuthorDetail.objects.all().values									('author__name','sex','email','birthday')
+	_set:提供了对象访问相关联表的数据的方法，
+		只能是相关的类访问定义了关系的类(主键类访问外键类)
+		pub = Publisher.objects.get(name='人民出版社')
+		pub.book_set.all().values('title')
+聚集查询和分组查询fen
+	aggregate 聚合查询 出现聚合函数的查询
+		给Book类增加价格字段
+			price = models.DecimalField(max_digits=5,decimal_places=2,default=10)
+		查询出版社名字为成都出版社出版了多少本书
+			from django.db.models import *
+			Book.objects.filter(publisher__name='成都出版社').aggregate(Count('title'))
+	
+		查询成都出版社出版的书的总价格
+			Book.objects.filter(publisher__name='成都出版社').aggregate(Sum('price'))
+	
+	
+	annotate 分组查询
+		查询所有出版社所出图书的总价格
+			Book.objects.values('publisher__name').annotate(Sum('price'))
+			values('publisher__name')作为分组条件
+
+		查询各个出版社最便宜的书价格
+			Book.objects.values('publisher__name').annotate(Min('price'))
+
+使用原生SQL
+	extra 结果集修改器
+		 Book.objects.filter(publisher__name='成都出版社').extra(where=['price>50'])
+		Book.objects.extra(select={'count':'select count(*) from hello_book'})
+	raw 执行原始SQL，并返回模型实例 最好用于查询操作
+		b = Book.objects.raw('select * from hello_book')
+		for i in b:
+    			print(i.title)
+		b = Book.objects.raw('insert into hello_author(name) values("陈海") ')
+	直接执行自定义SQL
+		from django.db import connection
+		#获取游标
+		cusor = connection.cursor()
+		#插入操作
+		cusor.execute('insert into hello_author(name) values("郭敬明")')
+		#更新操作
+		cusor.execute('update hello_author set name="韩寒" where name="郭敬明"')
+		#删除操作
+		cusor.execute('delete from hello_author where name="韩寒"')
+		#查询操作
+		cusor.execute('select * from hello_author')
+		cusor.fetchone()#返回一行数据
+		cusor.fetchall()#返回所有查询结果
+
+		
+
+
+
+			
